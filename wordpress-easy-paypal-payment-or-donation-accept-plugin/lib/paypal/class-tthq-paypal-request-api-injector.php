@@ -236,6 +236,7 @@ class PayPal_Request_API_Injector {
             //Create order_data for the API call.
             //https://developer.paypal.com/docs/api/orders/v2/#orders_create
             // If the 'breakdown' is provided then it needs to contain the sub_total, postage cost and tax (if any).
+            // When 'breakdown' is provided, the 'item_total' should match the sum of the individual items ($item_amount * $quantity).
             $order_data = [
                 "intent" => "CAPTURE",
                 "payment_source" => [

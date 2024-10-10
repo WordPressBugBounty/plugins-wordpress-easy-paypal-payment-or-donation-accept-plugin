@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com
 Tags: PayPal, PayPal payment, WordPress PayPal, PayPal donation, Accept payment for services or product
 Requires at least: 5.5
 Tested up to: 6.6
-Stable tag: 5.1.1
+Stable tag: 5.1.2
 License: GPLv2 or later
 
 Easy to use Wordpress plugin to accept PayPal payments for a service or product or donation in one click
@@ -59,6 +59,9 @@ https://www.youtube.com/watch?v=XL7Q8eU9dOY
 Visit the plugin site at https://www.tipsandtricks-hq.com/wordpress-easy-paypal-payment-or-donation-accept-plugin-120 for screenshots.
 
 == Changelog ==
+
+= 5.1.2 =
+- Resolved an intermittent checkout error caused by recent PayPal API updates.
 
 = 5.1.1 =
 - Added Norwegian krone (NOK) to the list of supported currencies in the settings menu.

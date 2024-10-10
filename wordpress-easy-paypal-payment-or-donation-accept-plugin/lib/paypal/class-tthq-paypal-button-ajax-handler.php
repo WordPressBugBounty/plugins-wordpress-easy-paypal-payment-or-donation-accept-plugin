@@ -137,8 +137,9 @@ class PayPal_Button_Ajax_Hander {
 			'item_name' => $item_name,
 			'description' => $description,			
 			'quantity' => 1,
-			'grand_total' => $payment_amount,
-			'sub_total' => $payment_amount,
+			'item_amount' => $payment_amount, //Individual item amount.
+			'grand_total' => $payment_amount, //In our case grand total is same as the payment amount.
+			'sub_total' => $payment_amount, //In our case sub total is same as the payment amount.
 			'shipping_amt' => 0, //Currently we are not using shipping.
 			'tax_amt' => 0, //Currently we are not using tax.
 			'currency' => $currency,
