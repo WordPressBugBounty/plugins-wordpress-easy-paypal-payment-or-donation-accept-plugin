@@ -515,13 +515,24 @@ function wpapp_load_ppcp_button( $args = array() ) {
 $wpapp_global_visitor_id = '';
 function wpapp_set_visitor_id_to_cookie(){
     if ( !isset($_COOKIE['wpapp_visitor_id']) || empty($_COOKIE['wpapp_visitor_id']) ) {
+        if(is_admin()){
+            //Don't run this code in the admin area side since we only need the visitor ID on the front end.
+            return;
+        }
+        
         //The cookie superglobal won't be available in the server until the next page load shince this is just getting set in the client side. 
         //On the next page load, the client will send the cookie to the server when it will be available in the $_COOKIE superglobal array for PHP to use.
         //So for this page load, we will set the visitor ID to a global variable that we can use in the shortcode function of the current page load.
-        global $wpapp_global_visitor_id;
-        $wpapp_global_visitor_id = uniqid();
-        // 1 day = 86400.
-        setcookie('wpapp_visitor_id', $wpapp_global_visitor_id, time() + (86400 * 30), "/"); 
+        
+        //Check if headers are already sent. If not, set the cookie.
+        if( !headers_sent() ){
+            //Set the visitor ID to the cookie.
+            global $wpapp_global_visitor_id;
+            $wpapp_global_visitor_id = uniqid();
+            // 1 day = 86400.
+            setcookie('wpapp_visitor_id', $wpapp_global_visitor_id, time() + (86400 * 30), "/"); 
+            wpapp_log_payment_debug('Visitor ID set to: ' . $wpapp_global_visitor_id, true);
+        }
     }
 }
 
