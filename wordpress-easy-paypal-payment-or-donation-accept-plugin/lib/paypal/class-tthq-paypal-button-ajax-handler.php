@@ -80,12 +80,12 @@ class PayPal_Button_Ajax_Hander {
 		/*****************************************************************************************
 		 * The following step will ensure that the selected value is valid and exists in the transient array.
 		 ****************************************************************************************/
-		//Get the selected value and its corresponding name.
+		//Get the selected value and its corresponding option data.
 		$selected_value = isset($data['selected_val']) ? $data['selected_val'] : '';
 		$available_options = isset($transient_array['payment_options']) ? $transient_array['payment_options'] : array();
-		$selected_option_name = isset($available_options[$selected_value]) ? $available_options[$selected_value] : '';
-		if (empty($selected_option_name)) {
-			PayPal_Utility_Functions::log( 'Error! Selected option name not found in the transient data: ' . $selected_option_name, true );
+		$selected_option_data = isset($available_options[$selected_value]) ? $available_options[$selected_value] : array();
+		if (empty($selected_option_data)) {
+			PayPal_Utility_Functions::log( 'Error! Selected option data not found in the transient data. Selected value: ' . $selected_value, true );
 			PayPal_Utility_Functions::log_array( $transient_array, true );
 			wp_send_json(
 				array(
@@ -95,6 +95,23 @@ class PayPal_Button_Ajax_Hander {
 			);
 			exit;
 		}
+
+		//Extract the display name and amount from the selected option data.
+		$selected_option_name = isset($selected_option_data['display_name']) ? $selected_option_data['display_name'] : '';
+		$selected_amount = isset($selected_option_data['amount']) ? (float) $selected_option_data['amount'] : 0;
+		
+		if (empty($selected_option_name) || $selected_amount <= 0) {
+			PayPal_Utility_Functions::log( 'Error! Invalid option data. Display name: ' . $selected_option_name . ', Amount: ' . $selected_amount, true );
+			wp_send_json(
+				array(
+					'success' => false,
+					'err_msg'  => __( 'Error! Invalid payment option data. Please refresh the page and try again.', 'accept-paypal-payment' ),
+				)
+			);
+			exit;
+		}
+
+		PayPal_Utility_Functions::log( 'Selected option: ' . $selected_option_name . ', Amount: ' . $selected_amount, true );
 
 		//Optional fields
 		$other_amount_val = isset($data['other_amount_val']) ? (float)$data['other_amount_val'] : 0;
@@ -106,9 +123,9 @@ class PayPal_Button_Ajax_Hander {
 			$payment_amount = $other_amount_val;
 			$item_name = 'Donation';
 		} else {
-			//Use the selected value as the payment amount.
-			PayPal_Utility_Functions::log( 'The user has selected a value from the dropdown options. Going to use the payment amount for the transaction: ' . $selected_value, true );
-			$payment_amount = $selected_value;
+			//Use the amount from the selected option data as the payment amount.
+			PayPal_Utility_Functions::log( 'Using the amount from the selected option: ' . $selected_amount, true );
+			$payment_amount = $selected_amount;
 			$item_name = $selected_option_name;
 		}
 

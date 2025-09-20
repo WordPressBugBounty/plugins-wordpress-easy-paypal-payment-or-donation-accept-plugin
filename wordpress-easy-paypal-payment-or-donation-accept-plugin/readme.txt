@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin, mbrsolution
 Donate link: https://www.tipsandtricks-hq.com
 Tags: PayPal, PayPal payment, WordPress PayPal, PayPal donation, Accept payment for services or product
 Requires at least: 5.5
-Tested up to: 6.7
-Stable tag: 5.1.3
+Tested up to: 6.8
+Stable tag: 5.1.4
 License: GPLv2 or later
 
 Easy to use Wordpress plugin to accept PayPal payments for a service or product or donation in one click
@@ -59,6 +59,9 @@ https://www.youtube.com/watch?v=XL7Q8eU9dOY
 Visit the plugin site at https://www.tipsandtricks-hq.com/wordpress-easy-paypal-payment-or-donation-accept-plugin-120 for screenshots.
 
 == Changelog ==
+
+= 5.1.4 =
+- Reworked how payment options are saved, allowing multiple options to share the same price without conflict.
 
 = 5.1.3 =
 - The visitor ID won't be set for admin area anymore since this is only needed for the front-end. This should help with the "headers already sent" error on some sites.

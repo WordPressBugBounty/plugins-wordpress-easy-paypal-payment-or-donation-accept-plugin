@@ -28,10 +28,16 @@ function wpapp_load_ppcp_button( $args = array() ) {
             $option = explode(':', $option);
             $name = esc_attr($option[0]);
             $price = esc_attr($option[1]);
-            // Remove $, £, and € symbols from the beginning of the string (if present).
-            $price_for_array_key = ltrim($price, '$£€');
-            //Construct our array with price as key and name (with price) as value.
-            $payment_options[$price_for_array_key] = $name .' - ' .$price;
+            // Remove $, £, and € symbols from the beginning of the price string (if present) for amount value.
+            $amount_value = (float) ltrim($price, '$£€');
+            $option_display_name = $name .' - ' .$price;
+            // Create a unique key using sanitize_title on the full option display name
+            $sanitized_key = sanitize_title($option_display_name);
+            //Construct our array with sanitized key and array containing display name and amount.
+            $payment_options[$sanitized_key] = array(
+                'display_name' => $option_display_name,
+                'amount' => $amount_value
+            );
         }
     } else {
         //Default arguments
@@ -60,33 +66,69 @@ function wpapp_load_ppcp_button( $args = array() ) {
         $value5 = get_option('wp_pp_payment_value5');
         $itemName6 = get_option('wp_pp_payment_item6');
         $value6 = get_option('wp_pp_payment_value6');
-        //Create our payment options array
-        $payment_options = array(
-            $value1 => $itemName1,
-        );
-        if( !empty($itemName2) ){
-            $payment_options[$value2] = $itemName2;
+        //Create our payment options array using multi-dimensional structure
+        $payment_options = array();
+        if( !empty($itemName1) && !empty($value1) ){
+            $display_name1 = $itemName1;
+            $amount_value1 = (float) ltrim($value1, '$£€');
+            $payment_options[sanitize_title($display_name1)] = array(
+                'display_name' => $display_name1,
+                'amount' => $amount_value1
+            );
         }
-        if( !empty($itemName3) ){
-            $payment_options[$value3] = $itemName3;
+        if( !empty($itemName2) && !empty($value2) ){
+            $display_name2 = $itemName2;
+            $amount_value2 = (float) ltrim($value2, '$£€');
+            $payment_options[sanitize_title($display_name2)] = array(
+                'display_name' => $display_name2,
+                'amount' => $amount_value2
+            );
         }
-        if( !empty($itemName4) ){
-            $payment_options[$value4] = $itemName4;
+        if( !empty($itemName3) && !empty($value3) ){
+            $display_name3 = $itemName3;
+            $amount_value3 = (float) ltrim($value3, '$£€');
+            $payment_options[sanitize_title($display_name3)] = array(
+                'display_name' => $display_name3,
+                'amount' => $amount_value3
+            );
         }
-        if( !empty($itemName5) ){
-            $payment_options[$value5] = $itemName5;
+        if( !empty($itemName4) && !empty($value4) ){
+            $display_name4 = $itemName4;
+            $amount_value4 = (float) ltrim($value4, '$£€');
+            $payment_options[sanitize_title($display_name4)] = array(
+                'display_name' => $display_name4,
+                'amount' => $amount_value4
+            );
         }
-        if( !empty($itemName6) ){
-            $payment_options[$value6] = $itemName6;
+        if( !empty($itemName5) && !empty($value5) ){
+            $display_name5 = $itemName5;
+            $amount_value5 = (float) ltrim($value5, '$£€');
+            $payment_options[sanitize_title($display_name5)] = array(
+                'display_name' => $display_name5,
+                'amount' => $amount_value5
+            );
+        }
+        if( !empty($itemName6) && !empty($value6) ){
+            $display_name6 = $itemName6;
+            $amount_value6 = (float) ltrim($value6, '$£€');
+            $payment_options[sanitize_title($display_name6)] = array(
+                'display_name' => $display_name6,
+                'amount' => $amount_value6
+            );
         }        
     }
 
     //print_r($payment_options);
     //Example of the payment_options array: 
     // Array ( 
-    //     [15.50] => T-Shirt Payment - 15.50 
-    //     [30.00] => Ticket Payment - 30.00 
-    //     [47.95] => Membership Payment - 47.95 
+    //     [fundraiser-t-shirt-s-25] => Array ( 
+    //         [display_name] => Fundraiser T-Shirt – S - 25.00
+    //         [amount] => 25.00
+    //     )
+    //     [fundraiser-t-shirt-m-25] => Array ( 
+    //         [display_name] => Fundraiser T-Shirt – M - 25.00
+    //         [amount] => 25.00
+    //     )
     //     )
     
     /***********************************************
@@ -201,8 +243,9 @@ function wpapp_load_ppcp_button( $args = array() ) {
     $widget_output .= '<div class="wpapp_payment_subject"><span class="payment_subject"><strong>'.esc_attr($paypal_subject).'</strong></span></div>';
     $widget_output .= '<select id="'.$select_id.'" name="'.$select_id.'" class="">';
     //Add the options (from the payment_options array) to the select box
-    foreach ($payment_options as $key => $value) {
-        $widget_output .= '<option value="'.esc_attr($key).'">'.esc_attr($value).'</option>';
+    foreach ($payment_options as $key => $option_data) {
+        $display_name = isset($option_data['display_name']) ? $option_data['display_name'] : '';
+        $widget_output .= '<option value="'.esc_attr($key).'">'.esc_attr($display_name).'</option>';
     }
     $widget_output .= '</select>';
 
