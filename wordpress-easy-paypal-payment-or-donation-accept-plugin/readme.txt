@@ -3,7 +3,7 @@ Contributors: Tips and Tricks HQ, Ruhul Amin, mbrsolution
 Donate link: https://www.tipsandtricks-hq.com
 Tags: PayPal, PayPal payment, WordPress PayPal, PayPal donation, Accept payment for services or product
 Requires at least: 5.5
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 5.1.4
 License: GPLv2 or later
 
